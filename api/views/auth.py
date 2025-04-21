@@ -35,6 +35,7 @@ class RegistrationView(APIView):
         return Response(
             {
                 'success': True,
+                'email': new_user.email,
                 'access_token': token,
                 'refresh_token': refresh_token
             },
