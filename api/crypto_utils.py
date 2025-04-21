@@ -20,7 +20,7 @@ def generate_jwt_keypair(user_id: int):
     access_token = encode(
         {
             'id': user_id,
-            'iss': int(datetime.now().timestamp()),
+            'iat': int(datetime.now().timestamp()),
             'exp': int((datetime.now() + access_token_expires).timestamp()),
         },
         settings.ACCESS_TOKEN_SECRET,
@@ -30,7 +30,7 @@ def generate_jwt_keypair(user_id: int):
         {
             'id': user_id,
             'jti': str(uuid.uuid4()),
-            'iss': int(datetime.now().timestamp()),
+            'iat': int(datetime.now().timestamp()),
             'exp': int((datetime.now() + refresh_token_expires).timestamp())
         },
         settings.REFRESH_TOKEN_SECRET,

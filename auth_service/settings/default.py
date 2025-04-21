@@ -9,15 +9,18 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
+
 import os
 
 from pathlib import Path
 
+from dotenv import load_dotenv
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 ENV_DIR = Path.joinpath(BASE_DIR, '.env')
 
-# load_dotenv(ENV_DIR)
+load_dotenv(ENV_DIR)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -25,18 +28,18 @@ ENV_DIR = Path.joinpath(BASE_DIR, '.env')
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-oj-&@1tfh2h!$^_ug(rkfcz6=$ty#dv$pc0h9&5+#3w--_@nb&'
 
-ACCESS_TOKEN_SECRET = os.environ.get('ACCESS_TOKEN_SECRET')
-REFRESH_TOKEN_SECRET = os.environ.get('REFRESH_TOKEN_SECRET')
-
-ACCESS_TOKEN_LIFETIME = os.environ.get('ACCESS_TOKEN_LIFETIME')
-REFRESH_TOKEN_LIFETIME = os.environ.get('REFRESH_TOKEN_LIFETIME')
-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
 AUTH_USER_MODEL = 'api.UserProfile'
+
+ACCESS_TOKEN_LIFETIME = os.environ.get('ACCESS_TOKEN_LIFETIME')
+REFRESH_TOKEN_LIFETIME = os.environ.get('REFRESH_TOKEN_LIFETIME')
+
+ACCESS_TOKEN_SECRET = os.environ.get('ACCESS_TOKEN_SECRET')
+REFRESH_TOKEN_SECRET = os.environ.get('REFRESH_TOKEN_SECRET')
 
 # REST FRAMEWORK
 REST_FRAMEWORK = {
@@ -100,10 +103,7 @@ DATABASES = {
         'USER': os.environ.get('POSTGRES_USER'),
         'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
         'HOST': os.environ.get('POSTGRES_HOST'),
-        'PORT': os.environ.get('POSTGRES_PORT'),
-        'TEST': {
-            'NAME': 'test_db',
-        },
+        'PORT': os.environ.get('POSTGRES_PORT')
     }
 }
 
