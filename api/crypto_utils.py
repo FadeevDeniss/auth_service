@@ -2,52 +2,27 @@ import uuid
 
 from datetime import timedelta, datetime
 
-import jwt
-from jwt import encode
-from django.conf import settings
-from rest_framework import exceptions
-
-from api.models import UserProfile
+from jwt import encode, decode, ExpiredSignatureError, InvalidTokenError
 
 
-def generate_jwt_keypair(user_id: int):
-    """
-    Generates keypair of access_token and refresh_token
-    """
-    access_token_expires = timedelta(seconds=int(settings.ACCESS_TOKEN_LIFETIME))
-    refresh_token_expires = timedelta(seconds=int(settings.REFRESH_TOKEN_LIFETIME))
+def sign_jwt(pk, secret, exp: int = 3600, alg: str = 'HS256'):
 
-    access_token = encode(
-        {
-            'id': user_id,
-            'iat': int(datetime.now().timestamp()),
-            'exp': int((datetime.now() + access_token_expires).timestamp()),
-        },
-        settings.ACCESS_TOKEN_SECRET,
-        algorithm='HS256'
-    )
-    refresh_token = encode(
-        {
-            'id': user_id,
-            'jti': str(uuid.uuid4()),
-            'iat': int(datetime.now().timestamp()),
-            'exp': int((datetime.now() + refresh_token_expires).timestamp())
-        },
-        settings.REFRESH_TOKEN_SECRET,
-        algorithm='HS256'
-    )
-    return access_token, refresh_token
+    issued_at = datetime.now()
+    expires = issued_at + timedelta(seconds=int(exp))
+    token_id = str(uuid.uuid4())
+
+    payload = {
+        'id': pk,
+        'jti': token_id,
+        'iat': round(issued_at.timestamp()),
+        'exp': round(expires.timestamp())
+    }
+    return encode(payload, secret, algorithm=alg, sort_headers=True)
 
 
-def verify_jwt_token(token: str, secret: str):
+def verify_jwt(token: str, secret: str):
     try:
-        payload = jwt.decode(token, secret, algorithms=['HS256'])
-    except jwt.ExpiredSignatureError:
-        raise exceptions.AuthenticationFailed('Token expired.')
-    except jwt.InvalidTokenError:
-        raise exceptions.AuthenticationFailed('Invalid token')
-
-    try:
-        return UserProfile.objects.get(id=payload['id']), payload
-    except UserProfile.DoesNotExist:
-        raise exceptions.AuthenticationFailed('No bearer token found.')
+        payload = decode(token, secret, algorithms=['HS256'])
+    except (ExpiredSignatureError, InvalidTokenError):
+        return None
+    return payload
