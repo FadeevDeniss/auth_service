@@ -10,4 +10,3 @@ class UserAdminBase(UserAdmin):
 
 
 admin.site.register(UserProfile, UserAdminBase)
-

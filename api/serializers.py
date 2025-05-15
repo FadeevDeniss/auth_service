@@ -1,19 +1,17 @@
 from rest_framework import serializers
+
 from api.models import UserProfile
 
 
-class CreateUserSerializer(serializers.ModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
+    username = None
+    email = serializers.EmailField()
+    password = serializers.CharField(min_length=8)
 
     class Meta:
         model = UserProfile
         fields = ['email', 'password']
-        extra_kwargs = {'password': {'write_only': True}}
 
-    def create(self, validated_data):
-        user = UserProfile(
-            email=validated_data['email']
-        )
-        user.set_password(validated_data['password'])
-        user.save()
 
-        return user
+class TokenSerializer(serializers.Serializer):
+    refresh_token = serializers.CharField(required=True)
