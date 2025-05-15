@@ -59,8 +59,8 @@ def created_user(django_db_setup, django_db_blocker, valid_credentials):
 
 
 @pytest.fixture
-def redis_add_document(redis_client):
-    redis_client.set(str(uuid.uuid4()), 0)
+def redis_add_document(redis_client, jwt_id):
+    redis_client.set(jwt_id, 0)
 
 
 @pytest.fixture
