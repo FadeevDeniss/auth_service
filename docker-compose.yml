@@ -9,6 +9,8 @@ services:
       - '8081:8081'
     env_file:
       - .env
+    environment:
+      - REDIS_HOST=redis
     depends_on:
       - db
   db:

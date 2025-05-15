@@ -71,7 +71,7 @@ def jwt_id():
 @pytest.fixture
 def jwt_payload(created_user, jwt_id):
     now = datetime.now()
-    delta = timedelta(seconds=settings.REFRESH_TOKEN_EXP)
+    delta = timedelta(seconds=int(settings.REFRESH_TOKEN_EXP))
 
     return {
         'id': created_user.pk,

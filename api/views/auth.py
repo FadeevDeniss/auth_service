@@ -140,7 +140,7 @@ class RefreshTokenView(APIView):
                 },
                 status=status.HTTP_404_NOT_FOUND
             )
-        exp_at = datetime.now() + timedelta(settings.REFRESH_TOKEN_EXP)
+        exp_at = datetime.now() + timedelta(seconds=int(settings.REFRESH_TOKEN_EXP))
         r.set(payload['jti'], 1)
         r.expireat(
             payload['jti'],
