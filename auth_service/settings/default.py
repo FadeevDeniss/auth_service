@@ -35,18 +35,30 @@ ALLOWED_HOSTS = ['*']
 
 AUTH_USER_MODEL = 'api.UserProfile'
 
-ACCESS_TOKEN_LIFETIME = os.environ.get('ACCESS_TOKEN_LIFETIME')
-REFRESH_TOKEN_LIFETIME = os.environ.get('REFRESH_TOKEN_LIFETIME')
+ACCESS_TOKEN_EXP = os.environ.get('ACCESS_TOKEN_EXP', 300)
+REFRESH_TOKEN_EXP = os.environ.get('REFRESH_TOKEN_EXP', 600)
 
 ACCESS_TOKEN_SECRET = os.environ.get('ACCESS_TOKEN_SECRET')
 REFRESH_TOKEN_SECRET = os.environ.get('REFRESH_TOKEN_SECRET')
+
+# REDIS DB
+REDIS_DB = os.environ.get('REDIS_DB')
+REDIS_HOST = os.environ.get('REDIS_HOST')
+REDIS_PORT = os.environ.get('REDIS_PORT')
 
 # REST FRAMEWORK
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer'
     ],
-    'TEST_REQUEST_DEFAULT_FORMAT': 'json'
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'api.auth_classes.JWTAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+    'TEST_REQUEST_DEFAULT_FORMAT': 'json',
+
 }
 
 # Application definition
